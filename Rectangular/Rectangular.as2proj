@@ -1,14 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<project>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project version="2">
   <!-- Output SWF options -->
   <output>
-    <movie disabled="True" />
+    <movie outputType="OtherIDE" />
     <movie input="" />
     <movie path="" />
     <movie fps="30" />
     <movie width="800" />
     <movie height="600" />
     <movie version="8" />
+    <movie minorVersion="0" />
+    <movie platform="Flash Player" />
     <movie background="#FFFFFF" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
@@ -52,4 +54,6 @@
     <option showHiddenPaths="False" />
     <option testMovie="Default" />
   </options>
+  <!-- Plugin storage -->
+  <storage />
 </project>

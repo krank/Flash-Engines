@@ -8,11 +8,9 @@
  * TODO:
  * - Camera smoothing
  * - Camera looking left/right
- * - Fix corner bug (adding extra headpoints?)
  * - Fix death
  * FUTURE:
  * - Add parallax scrolling backgrounds
- * - Add enemies
  * - Add life/health stuff
  */
 
@@ -45,8 +43,6 @@ class classJumper extends MovieClip {
 	var upForce;
 	
 	var mayJump;
-	
-	var lastDirection = 1;
 	
 	function onEnterFrame() {
 		// Reset the forces
@@ -114,7 +110,8 @@ class classJumper extends MovieClip {
 		// Check if the jumper is interacting with any solid objects
 		checkSolids();
 		
-		
+		// Do hit checking
+		hitChecks();
 
 		
 		// Apply camera movement if enabled
@@ -125,19 +122,15 @@ class classJumper extends MovieClip {
 		if (useCameraVertical) {
 			_root._y -= moveY;
 		}
-
-
+		
 
 		// Apply final forces.
 		_y += moveY;
 		_x += moveX;
-		
-		//var rectObject:Object = Stage.getRect(this);
-		
-		
-		
-		//trace(rectObject.xMin + "," + _x);
 
+		// Animate
+		animate();
+		
 	}
 	
 	function checkSolids() {
@@ -218,6 +211,36 @@ class classJumper extends MovieClip {
 			
 		}
 
+	}
+	
+	function hitChecks() {
+		// If there are unfriendlies...
+		if (_root.unFriendlies) {
+			// Go through all unfriendlies
+			for (var unFriendlyNum in _root.unFriendlies) {
+				
+				// Check if the unFriendly thing hits this
+				var unFriendly = _root.unFriendlies[unFriendlyNum];
+				if (this.hitTest(unFriendly)) {
+					
+					// Use each things isHit
+					this.isHit(unFriendly);
+					unFriendly.isHit(this);
+				}
+			}
+		}
+	}
+	
+	// Extend this class and replace the animate method in order to 
+	// animate the thing
+	function animate() {
+		
+	}
+	
+	// Extend this class and replace the isHit method
+	// in order to make something happen when the thing is hit
+	function isHit(thing) {
+		
 	}
 	
 }
