@@ -25,6 +25,8 @@ class classJumper extends MovieClip {
 	var useCameraHorizontal = true;
 	var useCameraVertical = false;
 	
+	var useWallFriction = true;
+	
 	// Set up controls
 	var leftButton = Key.LEFT;
 	var rightButton = Key.RIGHT;
@@ -134,7 +136,7 @@ class classJumper extends MovieClip {
 	}
 	
 	function checkSolids() {
-		
+
 		// Go through all solids
 		for (var solidnum in _root.solids) {
 			
@@ -167,6 +169,18 @@ class classJumper extends MovieClip {
 			if (overlapLeft) moveX += (s._width - overlapLeft["x"]);
 			// The part within parenthesis = the overlap from the right side (i.e. the overlap from the left subtracted from the width).
 		
+			
+			// --- WALL FRICTION ---
+			
+			//If there is left/right overlap and we are falling
+			if ((overlapLeft or overlapRight) and falling and useWallFriction) {
+				// Only apply friction it it has not already been applied, or if the applied friction is lower 
+				// than the new one. Always use the HIGHEST friction!
+				if (not wallFriction or wallFriction < s.sideFriction) {
+					// Set the friction based on the block we're colliding with
+					var wallFriction = s.sideFriction;
+				}
+			}
 			
 			// --- GROUND ---
 			
@@ -211,6 +225,12 @@ class classJumper extends MovieClip {
 			
 		}
 
+		
+		// --- APPLY WALL FRICTION ---
+		
+		if (wallFriction) {
+			moveY -= moveY * wallFriction;
+		}
 	}
 	
 	function hitChecks() {
