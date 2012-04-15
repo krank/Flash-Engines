@@ -8,6 +8,10 @@
 
 class classEnemy extends MovieClip {
 	
+	// Creature type
+	var type = "enemy";
+	
+	// Basic parameters
 	var gravity = 20;
 	var walkVelocity = 10;
 	var direction = 1;
@@ -207,7 +211,8 @@ class classEnemy extends MovieClip {
 	// Extend this class and replace the isHit and extraChecks methods
 	// in order to make extra checks or to make something happen when the thing is hit.
 	function isHit(thing) {
-		
+		// use thing to refer to what we hit
+		// use thing.type to read its type.
 	}
 	
 	function extraChecks() {

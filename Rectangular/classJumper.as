@@ -16,6 +16,9 @@
 
 class classJumper extends MovieClip {
 	
+	// Creature type
+	var type = "jumper";
+	
 	// Set up constants
 	var gravity = 20;
 	var maxJumpForce = 40;
@@ -311,7 +314,8 @@ class classJumper extends MovieClip {
 	// Extend this class and replace the isHit method
 	// in order to make something happen when the thing is hit
 	function isHit(thing) {
-		
+		// use thing to refer to what we hit
+		// use thing.type to read its type.
 	}
 	
 }
