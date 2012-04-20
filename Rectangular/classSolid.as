@@ -34,4 +34,9 @@ class classSolid extends MovieClip {
 		}
 	}
 	
+	function effectBottom(thing) {
+		thing.falling = true;
+		thing.moveY += _height - thing.overlap["y"];
+	}
+	
 }
