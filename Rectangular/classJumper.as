@@ -126,10 +126,19 @@ class classJumper extends MovieClip {
 		// Apply camera movement if enabled
 		if (useCameraHorizontal) {
 			_root._x -= moveX;
+			
+			// Static elements should not move
+			for (var i in _root.statics) {
+				_root.statics[i]._x += moveX;
+			}
 		}
 
 		if (useCameraVertical) {
 			_root._y -= moveY;
+			// Static elements should not move
+			for (var i in _root.statics) {
+				_root.statics[i]._y += moveY;
+			}
 		}
 		
 
