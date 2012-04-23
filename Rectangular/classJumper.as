@@ -53,6 +53,8 @@ class classJumper extends MovieClip {
 	
 	var mayJump;
 	
+	var overlap;
+	
 	function onEnterFrame() {
 		// Reset the forces
 		downForce = 0;
@@ -126,10 +128,19 @@ class classJumper extends MovieClip {
 		// Apply camera movement if enabled
 		if (useCameraHorizontal) {
 			_root._x -= moveX;
+			
+			// Static elements should not move
+			for (var i in _root.statics) {
+				_root.statics[i]._x += moveX;
+			}
 		}
 
 		if (useCameraVertical) {
 			_root._y -= moveY;
+			// Static elements should not move
+			for (var i in _root.statics) {
+				_root.statics[i]._y += moveY;
+			}
 		}
 		
 
@@ -207,7 +218,7 @@ class classJumper extends MovieClip {
 			
 			// --- GROUND ---
 			
-			var overlap = checkBottom(s);
+			overlap = checkBottom(s);
 			
 			// If any of the feet had overlap
 			if (overlap) {
@@ -231,11 +242,10 @@ class classJumper extends MovieClip {
 			}
 			
 			// --- ROOF ---
-			var overlap = checkUp(s) // Head point
+			overlap = checkUp(s) // Head point
 			
 			if (overlap) {
-				falling = true;
-				moveY += s._height - overlap["y"];
+				s.effectBottom(this);
 			}
 			
 		}
