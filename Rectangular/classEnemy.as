@@ -72,13 +72,13 @@ class classEnemy extends MovieClip {
 		
 		// Do extra checks
 		extraChecks();
-		
-		// Check for hits
-		hitChecks();
 
 		// Finalize movement
 		_x += moveX;
 		_y += moveY;
+		
+		// Animate
+		animate();
 		
 	}
 	
@@ -194,10 +194,6 @@ class classEnemy extends MovieClip {
 		return item.hitPoint(_x+_width/2, _y+moveY); // Head point
 	}
 	
-	function hitChecks() {
-		// --- NOT DONE YET
-	}
-	
 	// Extend this class and replace the leftCollide and rightCollide methods
 	// in order to gain more precise control of the thing's reactions to left/right collisions.
 	function leftCollide() {
@@ -216,6 +212,10 @@ class classEnemy extends MovieClip {
 	}
 	
 	function extraChecks() {
+		
+	}
+	
+	function animate() {
 		
 	}
 	

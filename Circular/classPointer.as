@@ -81,6 +81,7 @@ class classPointer extends MovieClip {
 		// --- COLLISIONS ---
 		
 		checkSolids();
+		hitChecks();
 		
 		// --- SHOOTING THINGS ---
 		
@@ -103,13 +104,6 @@ class classPointer extends MovieClip {
 	}
 	
 	function checkSolids() {
-		
-		// EXPERIMENTAL:
-		
-		// Create new movieclip;
-		
-		
-		
 		
 		// Set hypotheticals; if current move is done, what would be the x and y?
 		var hypotheticalX = _x + moveX;
@@ -177,4 +171,26 @@ class classPointer extends MovieClip {
 		}
 	}
 
+	function hitChecks() {
+		// If there are unfriendlies...
+		if (_root.unFriendlies) {
+			// Go through all unfriendlies
+			for (var unFriendlyNum in _root.unFriendlies) {
+				
+				// Check if the unFriendly thing hits this
+				var unFriendly = _root.unFriendlies[unFriendlyNum];
+				if (this.hitTest(unFriendly)) {
+					
+					// Use each things isHit
+					this.isHit(unFriendly);
+					unFriendly.isHit(this);
+				}
+			}
+		}
+	}
+	
+	function isHit(thing) {
+		
+	}
+	
 }

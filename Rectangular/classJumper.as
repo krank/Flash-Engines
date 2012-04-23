@@ -179,14 +179,18 @@ class classJumper extends MovieClip {
 			// --- WALLS ---
 
 			// Check if any of the right points are inside the solid
-
-			var overlapRight = checkRight(s);
-			if (overlapRight) moveX -= overlapRight["x"];
+			
+			if (moveX >= 0) {
+				var overlapRight = checkRight(s);
+				if (overlapRight) moveX -= overlapRight["x"];
+			}
 			
 			// Check if any of the left points are inside the solid
 			
-			var overlapLeft = checkLeft(s);
-			if (overlapLeft) moveX += (s._width - overlapLeft["x"]);
+			if (moveX <= 0) {
+				var overlapLeft = checkLeft(s);
+				if (overlapLeft) moveX += (s._width - overlapLeft["x"]);
+			}
 			// The part within parenthesis = the overlap from the right side (i.e. the overlap from the left subtracted from the width).
 			
 			// --- WALL FRICTION ---
