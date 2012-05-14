@@ -73,12 +73,12 @@ class classEnemy extends MovieClip {
 		// Do extra checks
 		extraChecks();
 
+		// Animate
+		animate();
+		
 		// Finalize movement
 		_x += moveX;
 		_y += moveY;
-		
-		// Animate
-		animate();
 		
 	}
 	
