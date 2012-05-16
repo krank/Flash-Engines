@@ -55,6 +55,8 @@ class classJumper extends MovieClip {
 	
 	var overlap;
 	
+	var lastDirection;
+	
 	function onEnterFrame() {
 		// Reset the forces
 		downForce = 0;
@@ -69,11 +71,13 @@ class classJumper extends MovieClip {
 		// Check for movement to the left; apply walkVelocity
 		if (Key.isDown(leftButton)) {
 			moveX -= walkVelocity;
+			lastDirection = -1;
 		}
 		
 		// Check for movement to the right; apply walkVelocity
 		if (Key.isDown(rightButton)) {
 			moveX += walkVelocity;
+			lastDirection = 1;
 		}
 		
 		
@@ -150,6 +154,9 @@ class classJumper extends MovieClip {
 
 		// Animate
 		animate();
+		
+		// Extra
+		extra();
 		
 	}
 	
@@ -322,6 +329,12 @@ class classJumper extends MovieClip {
 	// Extend this class and replace the animate method in order to 
 	// animate the thing
 	function animate() {
+		
+	}
+	
+	// Extend this class and replace the extra method in order to
+	// add extra code.
+	function extra() {
 		
 	}
 	

@@ -10,6 +10,7 @@ class classSolid extends MovieClip {
 	
 	// The amount of friction given to the jumper
 	var sideFriction = 0.5;
+	var type = "solid";
 	
 	function onLoad() {
 		// Check to see if the solids are already there. If they are not, create them
