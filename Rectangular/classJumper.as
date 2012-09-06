@@ -148,8 +148,8 @@ class classJumper extends MovieClip {
 		_y += moveY;
 		_x += moveX;
 
-		// Animate
-		animate();
+		// User-defined update()
+		update();
 		
 	}
 	
@@ -321,7 +321,7 @@ class classJumper extends MovieClip {
 	
 	// Extend this class and replace the animate method in order to 
 	// animate the thing
-	function animate() {
+	function update() {
 		
 	}
 	
