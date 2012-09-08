@@ -111,7 +111,7 @@ class classJumper extends MovieClip {
 			upForce += inertia;
 		}
 		
-		
+		// Calculate total Y-movement
 		moveY = downForce - upForce;
 		
 		// --- FINAL CHECKS ---
@@ -154,9 +154,6 @@ class classJumper extends MovieClip {
 
 		// User-defined update()
 		update();
-		
-		// Extra
-		extra();
 		
 	}
 	
@@ -322,21 +319,68 @@ class classJumper extends MovieClip {
 				}
 			}
 		}
+		
+		// If there are teleports...
+		if (_root.teleports) {
+			// Go through all teleports
+			for (var teleportNum in _root.teleports) {
+				
+				// Check if the teleport hits us
+				var teleport = _root.teleports[teleportNum];
+				if (this.hitTest(teleport)) {
+					
+					// Get the name of the teleport; will also be used as name for target.
+					var targetName = teleport._name;
+					
+					// Find the target, if it exists
+					var targetObject = false;
+					
+					for (var targetNum in _root.targets) {
+						if (_root.targets[targetNum]._name == targetName) {
+							targetObject = _root.targets[targetNum];
+						}
+					}
+					
+					// See if a target object has been found
+					if (!targetObject) {
+						// If not, try to go to the frame using the same name instead
+						_root.gotoAndStop(targetName);
+					} else {
+					
+						// Get difference in coordinates
+						var travelX = targetObject._x - this._x;
+						var travelY = targetObject._y - this._y;
+						
+						// Place jumper in center of target
+						
+						travelX += (targetObject._width / 2) - (this._width / 2);
+						travelY += (targetObject._height / 2) - (this._height / 2);
+						
+						// Apply x and y movement to both world and jumper, as appropriate
+					
+						this._x += travelX;
+						this._y += travelY;
+						
+						if (this.useCameraHorizontal) _root._x -= travelX;
+						if (this.useCameraVertical) _root._y -= travelY;
+						
+					}
+				}
+				
+			}
+			
+		}
+		
 	}
 
 	
 	
-	// Extend this class and replace the animate method in order to 
-	// animate the thing
+	// Extend this class and replace the update method in order to 
+	// add extra code.
 	function update() {
 		
 	}
-	
-	// Extend this class and replace the extra method in order to
-	// add extra code.
-	function extra() {
-		
-	}
+
 	
 	// Extend this class and replace the isHit method
 	// in order to make something happen when the thing is hit
