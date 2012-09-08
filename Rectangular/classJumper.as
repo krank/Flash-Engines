@@ -197,6 +197,7 @@ class classJumper extends MovieClip {
 			
 			if (moveX >= 0) {
 				var overlapRight = checkRight(s);
+				// Negate just enough movement to keep the jumper outside of the solid
 				if (overlapRight) moveX -= overlapRight["x"];
 			}
 			
@@ -204,6 +205,7 @@ class classJumper extends MovieClip {
 			
 			if (moveX <= 0) {
 				var overlapLeft = checkLeft(s);
+				// Negate just enough movement to keep the jumper outside of the solid
 				if (overlapLeft) moveX += (s._width - overlapLeft["x"]);
 			}
 			// The part within parenthesis = the overlap from the right side (i.e. the overlap from the left subtracted from the width).
