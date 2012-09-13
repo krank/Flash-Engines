@@ -40,4 +40,9 @@ class classSolid extends MovieClip {
 		thing.moveY += _height - thing.overlap["y"];
 	}
 	
+	function effectOverlap(thing, overlap) {
+		// Negate just enough movement to keep the jumper outside of the solid
+		thing.moveX += overlap;
+	}
+	
 }

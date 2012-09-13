@@ -197,16 +197,21 @@ class classJumper extends MovieClip {
 			
 			if (moveX >= 0) {
 				var overlapRight = checkRight(s);
-				// Negate just enough movement to keep the jumper outside of the solid
-				if (overlapRight) moveX -= overlapRight["x"];
+				// Use solid's overlap effect (for instance, stop jumper movement)
+				if (overlapRight) {
+					s.effectOverlap(this, 1 - overlapRight["x"]);
+				}
 			}
 			
 			// Check if any of the left points are inside the solid
 			
 			if (moveX <= 0) {
 				var overlapLeft = checkLeft(s);
-				// Negate just enough movement to keep the jumper outside of the solid
-				if (overlapLeft) moveX += (s._width - overlapLeft["x"]);
+				// Use solid's overlap effect (for instance, stop jumper movement)
+				if (overlapLeft) {
+					s.effectOverlap(this, (s._width - overlapLeft["x"]))
+				}
+				
 			}
 			// The part within parenthesis = the overlap from the right side (i.e. the overlap from the left subtracted from the width).
 			
@@ -347,6 +352,9 @@ class classJumper extends MovieClip {
 					if (!targetObject) {
 						// If not, try to go to the frame using the same name instead
 						_root.gotoAndStop(targetName);
+						// Also reset the "camera".
+						_root._x = 0;
+						_root._y = 0;
 					} else {
 					
 						// Get difference in coordinates

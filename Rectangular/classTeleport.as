@@ -5,8 +5,4 @@ class classTeleport extends MovieClip {
 		
 		_root.teleports.push(this);
 	}
-	
-	function activate() {
-		trace ("Go to target!");
-	}
 }
