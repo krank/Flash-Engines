@@ -26,7 +26,7 @@ class classJumper extends MovieClip {
 	var airDrag = 1.5; //  Make <1 in order to make air speed lower than ground speed
 	
 	var useCameraHorizontal = true;
-	var useCameraVertical = false;
+	var useCameraVertical = true;
 	
 	var useWallFriction = true;
 	
@@ -128,29 +128,8 @@ class classJumper extends MovieClip {
 		// Do hit checking
 		hitChecks();
 
-		
-		// Apply camera movement if enabled
-		if (useCameraHorizontal) {
-			_root._x -= moveX;
-			
-			// Static elements should not move
-			for (var i in _root.statics) {
-				_root.statics[i]._x += moveX;
-			}
-		}
-
-		if (useCameraVertical) {
-			_root._y -= moveY;
-			// Static elements should not move
-			for (var i in _root.statics) {
-				_root.statics[i]._y += moveY;
-			}
-		}
-		
-
 		// Apply final forces.
-		_y += moveY;
-		_x += moveX;
+		move(moveX, moveY);
 
 		// User-defined update()
 		update();
@@ -326,7 +305,6 @@ class classJumper extends MovieClip {
 				}
 			}
 		}
-		
 		// If there are teleports...
 		if (_root.teleports) {
 			// Go through all teleports
@@ -335,52 +313,45 @@ class classJumper extends MovieClip {
 				// Check if the teleport hits us
 				var teleport = _root.teleports[teleportNum];
 				if (this.hitTest(teleport)) {
-					
-					// Get the name of the teleport; will also be used as name for target.
-					var targetName = teleport._name;
-					
-					// Find the target, if it exists
-					var targetObject = false;
-					
-					for (var targetNum in _root.targets) {
-						if (_root.targets[targetNum]._name == targetName) {
-							targetObject = _root.targets[targetNum];
-						}
-					}
-					
-					// See if a target object has been found
-					if (!targetObject) {
-						// If not, try to go to the frame using the same name instead
-						_root.gotoAndStop(targetName);
-						// Also reset the "camera".
-						_root._x = 0;
-						_root._y = 0;
-					} else {
-					
-						// Get difference in coordinates
-						var travelX = targetObject._x - this._x;
-						var travelY = targetObject._y - this._y;
-						
-						// Place jumper in center of target
-						
-						travelX += (targetObject._width / 2) - (this._width / 2);
-						travelY += (targetObject._height / 2) - (this._height / 2);
-						
-						// Apply x and y movement to both world and jumper, as appropriate
-					
-						this._x += travelX;
-						this._y += travelY;
-						
-						if (this.useCameraHorizontal) _root._x -= travelX;
-						if (this.useCameraVertical) _root._y -= travelY;
-						
-					}
+					teleport.activate(this);
 				}
 				
 			}
 			
 		}
 		
+	}
+	
+	function move(moveX, moveY) {
+		// Set initial movement (relative to _root) for static objects
+		var staticMoveX = 0;
+		var staticMoveY = 0;
+
+		// Move the jumper
+		this._x += moveX;
+		this._y += moveY;
+		
+		// Check for camera movements
+		if (this.useCameraHorizontal) {
+			// Move _root along X-axis
+			_root._x -= moveX;
+			// Set static movement along X-axis
+			staticMoveX = moveX;
+		}
+		if (this.useCameraVertical) {
+			// Move _root along Y-axis
+			_root._y -= moveY;
+			// Set static movement aling Y-axis
+			staticMoveY = moveY;
+		}
+		
+		// Check statics
+		if (this.useCameraHorizontal || this.useCameraVertical) {
+			for (var i in _root.statics) {
+				_root.statics[i]._x += staticMoveX;
+				_root.statics[i]._y += staticMoveY;
+			}
+		}
 	}
 
 	
