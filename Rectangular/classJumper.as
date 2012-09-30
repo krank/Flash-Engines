@@ -8,7 +8,6 @@
  * TODO:
  * - Camera smoothing
  * - Camera looking left/right
- * - Fix death
  * FUTURE:
  * - Add parallax scrolling backgrounds
  * - Add life/health stuff
@@ -55,9 +54,14 @@ class classJumper extends MovieClip {
 	
 	var overlap;
 	
-	var lastDirection;
+	var lastDirection = 1;
+	
+	
+	var currentAnimState;
+	var newAnimState;
 	
 	function onEnterFrame() {
+		
 		// Reset the forces
 		downForce = 0;
 		upForce = 0;
@@ -130,9 +134,15 @@ class classJumper extends MovieClip {
 
 		// Apply final forces.
 		move(moveX, moveY);
+		
+		// Get new animation state
+		detectAnimationState();
 
 		// User-defined update()
 		update();
+		
+		// Apply animation state
+		applyAnimation();
 		
 	}
 	
@@ -351,6 +361,63 @@ class classJumper extends MovieClip {
 				_root.statics[i]._x += staticMoveX;
 				_root.statics[i]._y += staticMoveY;
 			}
+		}
+	}
+	
+	function detectAnimationState() {
+		newAnimState = currentAnimState;
+		
+		// If jumper is flying/is airborn
+		if (inAir) {
+			
+			// If the last directional command was "go right"...
+			if ((lastDirection > 0) && currentAnimState != "jumpRight") {
+				
+				// Set new state
+				newAnimState = "jumpRight";
+				
+			// Or if it was "go left"...
+			} else if ((Key.isDown(leftButton) || + lastDirection < 0) && currentAnimState != "jumpLeft") {
+				
+				// Set new state
+				newAnimState = "jumpLeft";
+				
+			}
+		} else {
+			// If right button is down and animstate not set accordingly
+			if (Key.isDown(rightButton) && currentAnimState != "walkRight") {
+				
+				// Set new state
+				newAnimState = "walkRight";
+			
+			// If left button is down and animstate not set accordingly
+			} else if (Key.isDown(leftButton) && currentAnimState != "walkLeft") {
+				
+				// Set new state
+				newAnimState = "walkLeft";
+			
+			// If no movement button is down and animstate not set accordingly
+			} else if (moveX == 0 && (currentAnimState != "standLeft" || currentAnimState != "standRight")) {
+				if (lastDirection > 0) {
+					
+					// Set new state
+					newAnimState = "standRight";
+
+				} else {
+					
+					// Set new state
+					newAnimState = "standLeft";
+					
+				}
+			}
+		}
+	}
+	
+	function applyAnimation() {
+		// if the new animstate is different from the current, make approproate changes.
+		if (currentAnimState != newAnimState) {
+			this.gotoAndStop(newAnimState);
+			currentAnimState = newAnimState;
 		}
 	}
 
