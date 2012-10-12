@@ -60,6 +60,10 @@ class classJumper extends MovieClip {
 	var currentAnimState;
 	var newAnimState;
 	
+	function onLoad() {
+		create();
+	}
+	
 	function onEnterFrame() {
 		
 		// Reset the forces
@@ -426,6 +430,10 @@ class classJumper extends MovieClip {
 	// Extend this class and replace the update method in order to 
 	// add extra code.
 	function update() {
+		
+	}
+	
+	function create() {
 		
 	}
 

@@ -13,17 +13,13 @@ class classMissile extends MovieClip {
 	var moveX;
 	var moveY;
 	
-	
-	function onLoad() {
-		if (not moveX) {
-			moveX = speed;
-		}
-	}
+	var degrees;
 	
 	
 	// Set the direction of the missile
 	function setDirection(degrees) {
 	
+		this.degrees = degrees;
 		var radians = degrees * (Math.PI / 180);
 		
 		// Get x- and y-movement based on radians and speed
@@ -35,6 +31,10 @@ class classMissile extends MovieClip {
 		this._rotation = degrees;
 	}
 	
+	function setSpeed(speed) {
+		this.speed = speed;
+	}
+	
 	function setTarget(target) {
 		// Calculate opposite and adjacent sides of the triangle
 		// i.e. the x- and y-distance between the missile and its target
@@ -43,13 +43,17 @@ class classMissile extends MovieClip {
 
 		// Calculate new angle based on distances (o/a)
 		var radians = Math.atan2(o, a);
-		var degrees = radians * (180 / Math.PI);
+		this.degrees = radians * (180 / Math.PI);
 		
 		// Set new direction
 		setDirection(degrees);
 	}
 	
 	function onEnterFrame() {
+		
+		if (not moveX) {
+			moveX = speed;
+		}
 		
 		// If the missile is a seeker
 		if (follow) {
@@ -113,6 +117,10 @@ class classMissile extends MovieClip {
 	
 	
 	function update() {
+		
+	}
+	
+	function create() {
 		
 	}
 	
