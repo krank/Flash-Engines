@@ -33,6 +33,7 @@ class classMissile extends MovieClip {
 	
 	function setSpeed(speed) {
 		this.speed = speed;
+		setDirection(this.degrees);
 	}
 	
 	function setTarget(target) {
