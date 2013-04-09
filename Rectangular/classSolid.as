@@ -17,6 +17,12 @@ class classSolid extends MovieClip {
 		if (not _root.solids) _root.solids = new Array();
 		
 		_root.solids.push(this);
+		load();
+	}
+	
+	
+	function load() {
+		// Placeholder
 	}
 	
 	function hitPoint(x, y) {

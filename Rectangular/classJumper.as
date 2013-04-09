@@ -91,9 +91,6 @@ class classJumper extends MovieClip {
 		
 		// --- JUMPING AND FALLING (Y-movement)
 
-		// Apply gravity
-		downForce += gravity;
-
 		// Check if jump button is pressed, and we've not begun falling
 		if (Key.isDown(jumpButton) and not falling and mayJump) {
 			// Reduce jump force
@@ -104,6 +101,9 @@ class classJumper extends MovieClip {
 				upForce += jumpForce;
 			}
 		}
+		
+		// Apply gravity
+		downForce += gravity;
 		
 		// Set-up at beginning of fall
 		if ((downForce > upForce) and not falling) {
