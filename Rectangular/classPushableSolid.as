@@ -12,19 +12,47 @@ class classPushableSolid extends classSolid {
 	var dirty:Boolean = false;
 	
 	var collisionChecker:MovieClip;
+	var sideChecker:MovieClip;
+	
+	var moveX:Number = 0;
 	
 	function load() {
-		createCollisionChecker();
+		collisionChecker = createCollisionChecker(_x, _y, _width, _height );
+		
+		sideChecker = createCollisionChecker(_x, _y + (0.10 * _height), 10, 0.80 * _height);
 	}
 	
 	function effectOverlap(thing, overlap) {
+		
 		this._x -= overlap;
 		dirty = true;
+		
+		if (overlap < 0) { // if going to right
+			sideChecker._x = _x + _width;
+		} else {
+			sideChecker._x = _x - sideChecker._width;
+		}
 		
 		// This needs a checker for collisions left/right...
 	}
 	
+	function collideSolids() {
+		for (var sNum in _root.solids) {
+			var solid = _root.solids[sNum];
+			if (solid != this) {
+				if (this.collisionChecker.hitTest(solid)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+		
+	}
+	
 	function onEnterFrame() {
+
+		//trace(collideSolids());
 		
 		// Move some of this to effectOverlap? Or have permanent variables stating current state of collisions left/right?
 		
@@ -39,8 +67,8 @@ class classPushableSolid extends classSolid {
 				if (solid != this) {
 					if (this.collisionChecker.hitTest(solid)) {
 						// Modify downward force accordingly
-						var neg = collisionChecker._y + collisionChecker._height - solid._y;
-						collisionChecker._y -= neg;
+						var negY = collisionChecker._y + collisionChecker._height - solid._y;
+						collisionChecker._y -= negY;
 						dirty = false;
 						falling = false;
 					}
@@ -49,36 +77,44 @@ class classPushableSolid extends classSolid {
 			
 			if (this._y < collisionChecker._y) {
 				this._y = collisionChecker._y;
-				
+				sideChecker._y = collisionChecker._y + collisionChecker._height * 0.10;
 			}
 			
+		} else {
+			collisionChecker._y = _y-1;
+			collisionChecker._x = _x;
 		}
+		
+		//sideChecker._x = _x;
+		//sideChecker._y = _y;
 		
 	}
 
 	// Create a collision checker movieclip
-	function createCollisionChecker() {
-		var w:Number = this._width;
-		var h:Number = this._height;
+	function createCollisionChecker(xPos:Number, yPos:Number, width:Number, height:Number, ident:String) {
+
+		var w:Number = width;
+		var h:Number = height;
 		
-		var depth:Number = this.getNextHighestDepth()
-		this.collisionChecker = _root.createEmptyMovieClip("checker", depth);
+		var depth:Number = _root.getNextHighestDepth();
+		var c = _root.createEmptyMovieClip(ident, depth);
 		
 		// Draw
-		this.collisionChecker.beginFill(0x333333);
-		this.collisionChecker.lineTo(w, 0);
-		this.collisionChecker.lineTo(w, h);
-		this.collisionChecker.lineTo(0, h);
-		this.collisionChecker.lineTo(0, 0);
-		this.collisionChecker.endFill();
+		c.beginFill(0x333333);
+		c.lineTo(w, 0);
+		c.lineTo(w, h);
+		c.lineTo(0, h);
+		c.lineTo(0, 0);
+		c.endFill();
 		
-		this.collisionChecker._x = _x;
-		this.collisionChecker._y = _y;
-		this.collisionChecker._visible = true;
-		this.collisionChecker._alpha = 0;
+		c._x = xPos;
+		c._y = yPos;
+		c._visible = true;
+		c._alpha = 50;
 		
-		this.hitArea = this.collisionChecker;
-		
+		return c;
 	}
+	
+	
 	
 }
