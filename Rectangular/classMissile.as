@@ -16,6 +16,8 @@ class classMissile extends MovieClip {
 	var degrees;
 	
 	
+	
+	
 	// Set the direction of the missile
 	function setDirection(degrees) {
 	

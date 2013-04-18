@@ -16,6 +16,11 @@ class classPushableSolid extends classSolid {
 	
 	var moveX:Number = 0;
 	
+	
+	var allowLeft:Boolean = true;
+	var allowRight:Boolean = true;
+	
+	
 	function load() {
 		collisionChecker = createCollisionChecker(_x, _y, _width, _height );
 		
@@ -24,7 +29,9 @@ class classPushableSolid extends classSolid {
 	
 	function effectOverlap(thing, overlap) {
 		
-		this._x -= overlap;
+		if ( (overlap < 0 && allowRight) ) {
+			this._x -= overlap;
+		}
 		dirty = true;
 		
 		if (overlap < 0) { // if going to right
@@ -72,6 +79,19 @@ class classPushableSolid extends classSolid {
 						dirty = false;
 						falling = false;
 					}
+					
+					// Check side collision
+					
+					if (this.sideChecker.hitTest(solid)) {
+						if (this.sideChecker._x > this._x) {
+							trace("hey");
+							trace(this + " " + solid)
+						}
+					}
+					
+					
+					
+					
 				}
 			}
 			
@@ -89,6 +109,7 @@ class classPushableSolid extends classSolid {
 		//sideChecker._y = _y;
 		
 	}
+	
 
 	// Create a collision checker movieclip
 	function createCollisionChecker(xPos:Number, yPos:Number, width:Number, height:Number, ident:String) {
