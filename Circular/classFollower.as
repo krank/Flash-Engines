@@ -37,53 +37,55 @@ class classFollower extends MovieClip {
 	}	
 
 	function onEnterFrame() {
+		if (!_root.paused) {
 		
 		
-		
-		// Set x- and y-movement to 0
-		moveX = 0;
-		moveY = 0;
-		
-		// Get the x-distance and y-distance between the target and this enemy.
-		var o = _root[followTarget]._x - _x;
-		var a = _root[followTarget]._y - _y;
-		
-		// Get the radians based on arctan of a, o.
-		//  This means calculating the angle based on the x/y distances, which act as
-		//  the Opposite and Adjacent sides of the triangle.
-		radians = Math.atan2(a, o);
-		
-		// Calculate the degrees based on the radians.
-		degrees = radians * (180 / Math.PI)
-		
-		
-		// Calculate the distance (hypotenuse) between target and this enemy.
-		var distance = Math.sqrt(Math.pow(a, 2) + Math.pow(o, 2));
-		
-		// if the distance is greater than 5, calculate x, y-movement based on velocity and angle
-		if (distance > 5) {
-			moveX = Math.cos(radians) * walkVelocity;
-			moveY = Math.sin(radians) * walkVelocity;
+			// Set x- and y-movement to 0
+			moveX = 0;
+			moveY = 0;
+			
+			// Get the x-distance and y-distance between the target and this enemy.
+			var o = _root[followTarget]._x - _x;
+			var a = _root[followTarget]._y - _y;
+			
+			// Get the radians based on arctan of a, o.
+			//  This means calculating the angle based on the x/y distances, which act as
+			//  the Opposite and Adjacent sides of the triangle.
+			radians = Math.atan2(a, o);
+			
+			// Calculate the degrees based on the radians.
+			degrees = radians * (180 / Math.PI)
+			
+			
+			// Calculate the distance (hypotenuse) between target and this enemy.
+			var distance = Math.sqrt(Math.pow(a, 2) + Math.pow(o, 2));
+			
+			// if the distance is greater than 5, calculate x, y-movement based on velocity and angle
+			if (distance > 5) {
+				moveX = Math.cos(radians) * walkVelocity;
+				moveY = Math.sin(radians) * walkVelocity;
+			}
+			
+			// Check for solids
+			
+			if (not ghost) checkSolids();
+			
+			// --- FINALIZE ---
+			
+			// Move
+			_x += moveX;
+			_y += moveY;
+			
+			// Rotate
+			_rotation = degrees;
+			
+			// Animate
+			animate();
+			
+			// Do extra checking
+			extraChecks();
+			
 		}
-		
-		// Check for solids
-		
-		if (not ghost) checkSolids();
-		
-		// --- FINALIZE ---
-		
-		// Move
-		_x += moveX;
-		_y += moveY;
-		
-		// Rotate
-		_rotation = degrees;
-		
-		// Animate
-		animate();
-		
-		// Do extra checking
-		extraChecks();
 		
 	}
 	

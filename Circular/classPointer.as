@@ -55,80 +55,82 @@ class classPointer extends MovieClip {
 	
 	function onEnterFrame() {
 
-		// Reset things
-		moveX = 0;
-		moveY = 0;
-		look_degrees = 0;
-		move_degrees = 0;
+		if (!_root.paused) {
 		
-		// --- MOVEMENT ---
-		
-		if (moveKeys) {
-			if (Key.isDown(leftKey)) moveX -= walkVelocity;
-			if (Key.isDown(rightKey)) moveX += walkVelocity;
-			if (Key.isDown(upKey)) moveY -= walkVelocity;
-			if (Key.isDown(downKey)) moveY += walkVelocity;
-		} else if (followPointer) {
-			var o = _root._xmouse - _x;
-			var a = _root._ymouse - _y;
+			// Reset things
+			moveX = 0;
+			moveY = 0;
+			look_degrees = 0;
+			move_degrees = 0;
 			
-			// Get the radians based on arctan of a, o
-			move_radians = Math.atan2(a, o);
+			// --- MOVEMENT ---
 			
-			// Calculate the degrees
-			move_degrees = move_radians * (180 / Math.PI)
+			if (moveKeys) {
+				if (Key.isDown(leftKey)) moveX -= walkVelocity;
+				if (Key.isDown(rightKey)) moveX += walkVelocity;
+				if (Key.isDown(upKey)) moveY -= walkVelocity;
+				if (Key.isDown(downKey)) moveY += walkVelocity;
+			} else if (followPointer) {
+				var o = _root._xmouse - _x;
+				var a = _root._ymouse - _y;
+				
+				// Get the radians based on arctan of a, o
+				move_radians = Math.atan2(a, o);
+				
+				// Calculate the degrees
+				move_degrees = move_radians * (180 / Math.PI)
+				
+				distance = Math.sqrt(Math.pow(_xmouse, 2) + Math.pow(_ymouse, 2));
+				
+				if (distance > 15) {
+					// Calculate moveX and moveY
+					moveX = Math.cos(move_radians) * walkVelocity;
+					moveY = Math.sin(move_radians) * walkVelocity;
+				}
+			}
 			
-			distance = Math.sqrt(Math.pow(_xmouse, 2) + Math.pow(_ymouse, 2));
+			// --- ROTATION ---
 			
-			if (distance > 15) {
-				// Calculate moveX and moveY
-				moveX = Math.cos(move_radians) * walkVelocity;
-				moveY = Math.sin(move_radians) * walkVelocity;
+			// get the opposite and adjacent sides
+			if (lookAtPointer) {
+				var o = _root._xmouse - _x;
+				var a = _root._ymouse - _y;
+			} else {
+				var o = moveX;
+				var a = moveY;
+			}
+			
+			look_radians = Math.atan2(a, o);
+			look_degrees = look_radians * (180 / Math.PI);
+				
+			// --- COLLISIONS ---
+			
+			checkSolids();
+			hitChecks();
+			
+			// --- SHOOTING THINGS ---
+			
+			// Not done yet
+			
+			// --- CAMERA ---
+			
+			if (cameraFollowHorizontal) _root._x -= moveX;
+			
+			if (cameraFollowVertical) _root._y -= moveY;
+			
+			// --- UPDATE
+			
+			update();
+			
+			// --- FINALIZE ---
+			
+			_x += moveX;
+			_y += moveY;
+			
+			if (lookAtPointer) {
+				_rotation = look_degrees;
 			}
 		}
-		
-		// --- ROTATION ---
-		
-		// get the opposite and adjacent sides
-		if (lookAtPointer) {
-			var o = _root._xmouse - _x;
-			var a = _root._ymouse - _y;
-		} else {
-			var o = moveX;
-			var a = moveY;
-		}
-		
-		look_radians = Math.atan2(a, o);
-		look_degrees = look_radians * (180 / Math.PI);
-			
-		// --- COLLISIONS ---
-		
-		checkSolids();
-		hitChecks();
-		
-		// --- SHOOTING THINGS ---
-		
-		// Not done yet
-		
-		// --- CAMERA ---
-		
-		if (cameraFollowHorizontal) _root._x -= moveX;
-		
-		if (cameraFollowVertical) _root._y -= moveY;
-		
-		// --- UPDATE
-		
-		update();
-		
-		// --- FINALIZE ---
-		
-		_x += moveX;
-		_y += moveY;
-		
-		if (lookAtPointer) {
-			_rotation = look_degrees;
-		}
-		
 	}
 	
 	function checkSolids() {

@@ -1,6 +1,6 @@
 class classPushableSolid extends classSolid {
 	
-	var gravity:Number = 20; // Max fall speed. Set to 0 to disable gravity.
+	var gravity:Number = 5; // Max fall speed. Set to 0 to disable gravity.
 	var inertia:Number = 0; // Current inertia
 	
 	var visibleCheckers = false;
@@ -57,47 +57,50 @@ class classPushableSolid extends classSolid {
 	
 	function onEnterFrame() {
 		
-		// Check if there's any reason to suspect any change
-		if (dirty) {
-			
-			// Reset the collision checker's x and y values to those of the block
-			collisionChecker._x = _x;
-			collisionChecker._y = _y;
+		if (!_root.paused) {
+		
+			// Check if there's any reason to suspect any change
+			if (dirty) {
+				
+				// Reset the collision checker's x and y values to those of the block
+				collisionChecker._x = _x;
+				collisionChecker._y = _y;
 
-			// Apply gravity and inertia to collisionChecker
-			if (gravity > 0) collisionChecker._y += gravity - inertia;
-			
-			allowLeft = true;
-			allowRight = true;
-			
-			// Check if collision checker collides with any of our friends
-			for (var sNum in _root.solids) {
-				var solid = _root.solids[sNum];
-				if (solid != this) {
-					if (this.collisionChecker.hitTest(solid)) {
-						// Modify downward force accordingly
-						var negY = collisionChecker._y + collisionChecker._height - solid._y;
-						collisionChecker._y -= negY;
-						dirty = false;
-					}
-					
-					// check left/right collisions
-					if (solid.hitTest(this.sideChecker)) {
-						if (this.sideChecker._x > this._x) {
-							allowRight = false;
-						} else {
-							allowLeft = false;
+				// Apply gravity and inertia to collisionChecker
+				if (gravity > 0) collisionChecker._y += gravity - inertia;
+				
+				allowLeft = true;
+				allowRight = true;
+				
+				// Check if collision checker collides with any of our friends
+				for (var sNum in _root.solids) {
+					var solid = _root.solids[sNum];
+					if (solid != this) {
+						if (this.collisionChecker.hitTest(solid)) {
+							// Modify downward force accordingly
+							var negY = collisionChecker._y + collisionChecker._height - solid._y;
+							collisionChecker._y -= negY;
+							dirty = false;
+						}
+						
+						// check left/right collisions
+						if (solid.hitTest(this.sideChecker)) {
+							if (this.sideChecker._x > this._x) {
+								allowRight = false;
+							} else {
+								allowLeft = false;
+							}
 						}
 					}
 				}
+				
+				this._y = collisionChecker._y;
+				sideChecker._y = collisionChecker._y + collisionChecker._height * 0.10;
+				
 			}
 			
-			this._y = collisionChecker._y;
-			sideChecker._y = collisionChecker._y + collisionChecker._height * 0.10;
-			
+			update();
 		}
-		
-		update();
 	}
 
 	// Create a collision checker movieclip

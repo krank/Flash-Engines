@@ -66,87 +66,90 @@ class classJumper extends MovieClip {
 	
 	function onEnterFrame() {
 		
-		// Reset the forces
-		downForce = 0;
-		upForce = 0;
-		moveX = 0;
-		moveY = 0;
+		if (!_root.paused) {
 		
-		inAir = true;
-		
-		// --- WALKING (X-movement)
-		
-		// Check for movement to the left; apply walkVelocity
-		if (Key.isDown(leftButton)) {
-			moveX -= walkVelocity;
-			lastDirection = -1;
-		}
-		
-		// Check for movement to the right; apply walkVelocity
-		if (Key.isDown(rightButton)) {
-			moveX += walkVelocity;
-			lastDirection = 1;
-		}
-		
-		
-		// --- JUMPING AND FALLING (Y-movement)
-
-		// Check if jump button is pressed, and we've not begun falling
-		if (Key.isDown(jumpButton) and not falling and mayJump) {
-			// Reduce jump force
-			jumpForce -= 2;
+			// Reset the forces
+			downForce = 0;
+			upForce = 0;
+			moveX = 0;
+			moveY = 0;
 			
-			// Add jump force if it's still higher than the gravity
-			if (jumpForce >= gravity) {	
-				upForce += jumpForce;
+			inAir = true;
+			
+			// --- WALKING (X-movement)
+			
+			// Check for movement to the left; apply walkVelocity
+			if (Key.isDown(leftButton)) {
+				moveX -= walkVelocity;
+				lastDirection = -1;
 			}
-		}
-		
-		// Apply gravity
-		downForce += gravity;
-		
-		// Set-up at beginning of fall
-		if ((downForce > upForce) and not falling) {
-			// Set falling
-			falling = true;
-			// Set initial inertia
-			inertia = gravity;
-		}
-		
-		// Reduce inertia and apply it, if we are falling
-		if (falling) {
-			if (inertia > 0) inertia -= 2;
-			upForce += inertia;
-		}
-		
-		// Calculate total Y-movement
-		moveY = downForce - upForce;
-		
-		// --- FINAL CHECKS ---
+			
+			// Check for movement to the right; apply walkVelocity
+			if (Key.isDown(rightButton)) {
+				moveX += walkVelocity;
+				lastDirection = 1;
+			}
+			
+			// --- JUMPING AND FALLING (Y-movement)
 
-		// Apply air drag if we're in the air
-		if (inAir) {
-			// If in the air, air drag should be applied.
-			moveX *= airDrag;
+			// Check if jump button is pressed, and we've not begun falling
+			if (Key.isDown(jumpButton) and not falling and mayJump) {
+				// Reduce jump force
+				jumpForce -= 2;
+				
+				// Add jump force if it's still higher than the gravity
+				if (jumpForce >= gravity) {	
+					upForce += jumpForce;
+				}
+			}
+			
+			// Apply gravity
+			downForce += gravity;
+			
+			// Set-up at beginning of fall
+			if ((downForce > upForce) and not falling) {
+				// Set falling
+				falling = true;
+				// Set initial inertia
+				inertia = gravity;
+			}
+			
+			// Reduce inertia and apply it, if we are falling
+			if (falling) {
+				if (inertia > 0) inertia -= 2;
+				upForce += inertia;
+			}
+			
+			// Calculate total Y-movement
+			moveY = downForce - upForce;
+			
+			// --- FINAL CHECKS ---
+
+			// Apply air drag if we're in the air
+			if (inAir) {
+				// If in the air, air drag should be applied.
+				moveX *= airDrag;
+			}
+			
+			// Check if the jumper is interacting with any solid objects
+			checkSolids();
+			
+			// Do hit checking
+			hitChecks();
+
+			// Apply final forces.
+			move(moveX, moveY);
+			
+			// Get new animation state
+			detectAnimationState();
+
+			// User-defined update()
+			update();
+			
+			// Apply animation state
+			applyAnimation();
+		
 		}
-		
-		// Check if the jumper is interacting with any solid objects
-		checkSolids();
-		
-		// Do hit checking
-		hitChecks();
-
-		// Apply final forces.
-		move(moveX, moveY);
-		
-		// Get new animation state
-		detectAnimationState();
-
-		// User-defined update()
-		update();
-		
-		// Apply animation state
-		applyAnimation();
 		
 	}
 	

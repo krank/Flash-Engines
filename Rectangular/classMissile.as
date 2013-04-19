@@ -54,25 +54,27 @@ class classMissile extends MovieClip {
 	
 	function onEnterFrame() {
 		
-		if (not moveX) {
-			moveX = speed;
-		}
-		
-		// If the missile is a seeker
-		if (follow) {
-			setTarget(_root[follow]);
-		}
-		
-		// Update
-		update();
-		
-		// Move missile
-		_x += moveX;
-		_y += moveY;
+		if (!_root.paused) {
+			
+			if (not moveX) {
+				moveX = speed;
+			}
+			
+			// If the missile is a seeker
+			if (follow) {
+				setTarget(_root[follow]);
+			}
+			
+			// Update
+			update();
+			
+			// Move missile
+			_x += moveX;
+			_y += moveY;
 
-		// Make hit testing
-		hitTests();
-		
+			// Make hit testing
+			hitTests();
+		}
 	}
 	
 	function hitTests() {

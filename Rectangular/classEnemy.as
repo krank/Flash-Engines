@@ -38,48 +38,50 @@ class classEnemy extends MovieClip {
 	}
 	
 	function onEnterFrame() {
-		// Reset the forces
-		downForce = 0;
-		upForce = 0;
-		moveX = 0;
-		moveY = 0;
 		
-		// If we are not falling, walk.
-		if (not falling) moveX += walkVelocity * direction;
-		
-		// Apply gravity
-		downForce += gravity;
-		
-		// Set-up at beginning of fall
-		if ((downForce > upForce) and not falling) {
-			// Set falling
-			falling = true;
-			// Set initial inertia
-			inertia = gravity;
-		}
-		
-		// Reduce inertia and apply it, if we are falling
-		if (falling) {
-			if (inertia > 0) inertia -= 2;
-			upForce += inertia;
-		}
-		
-		// Finalize Y-movement
-		moveY = downForce - upForce;
-		
-		// Check for collisions w/ solids
-		checkSolids();
-		
-		// Do extra checks
-		extraChecks();
+		if (!_root.paused) {
+			// Reset the forces
+			downForce = 0;
+			upForce = 0;
+			moveX = 0;
+			moveY = 0;
+			
+			// If we are not falling, walk.
+			if (not falling) moveX += walkVelocity * direction;
+			
+			// Apply gravity
+			downForce += gravity;
+			
+			// Set-up at beginning of fall
+			if ((downForce > upForce) and not falling) {
+				// Set falling
+				falling = true;
+				// Set initial inertia
+				inertia = gravity;
+			}
+			
+			// Reduce inertia and apply it, if we are falling
+			if (falling) {
+				if (inertia > 0) inertia -= 2;
+				upForce += inertia;
+			}
+			
+			// Finalize Y-movement
+			moveY = downForce - upForce;
+			
+			// Check for collisions w/ solids
+			checkSolids();
+			
+			// Do extra checks
+			extraChecks();
 
-		// Animate
-		animate();
-		
-		// Finalize movement
-		_x += moveX;
-		_y += moveY;
-		
+			// Animate
+			animate();
+			
+			// Finalize movement
+			_x += moveX;
+			_y += moveY;
+		}
 	}
 	
 	
