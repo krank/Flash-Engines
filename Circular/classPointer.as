@@ -14,26 +14,43 @@
 
 class classPointer extends MovieClip {
 	
-	var walkVelocity = 10;
+	// Walking speed
+	var walkVelocity:Number = 10;
+
+	// Keys to use
+	var upKey:Number = 87;		//w
+	var downKey:Number = 83;	//s
+	var leftKey:Number = 65;	//a
+	var rightKey:Number = 68;	//d
+
+	// What to follow and look at
+	var followPointer:Boolean = true;
+	var lookAtPointer:Boolean = true;
+	var moveKeys:Boolean = false; // Overrides followPointer when true
+	var deadzone:Number = 15 // only used when following pointer
 	
-	var degrees;
-	var radians;
+	// Camera following
+	var cameraFollowVertical:Boolean = false;
+	var cameraFollowHorizontal:Boolean = false;
 	
-	var upKey = 87;		//w
-	var downKey = 83;	//s
-	var leftKey = 65;	//a
-	var rightKey = 68;	//d
+	// Set to the radius used for collision detection (assuming round symbol)
+	var radius:Number = 25;
+
+
+	// Remembers the rotation direction
+	var look_degrees:Number;
+	var look_radians:Number;
+	// Remembers the movement direction
+	var move_degrees:Number;
+	var move_radians:Number;
 	
-	var moveX;
-	var moveY;
+	// Remembers the movement
+	var moveX:Number;
+	var moveY:Number;
 	
-	var followPointer = true;
-	var moveKeys = false;
+	// Remembers the distance between pointer and center of pointer
+	var distance:Number;
 	
-	var cameraFollowVertical = false;
-	var cameraFollowHorizontal = false;
-	
-	var radius = 25;
 	
 	
 	function onEnterFrame() {
@@ -41,19 +58,8 @@ class classPointer extends MovieClip {
 		// Reset things
 		moveX = 0;
 		moveY = 0;
-		degrees = 0;
-		
-		// --- ROTATION ---
-		
-		// get the opposite and adjacent sides
-		var o = _root._xmouse - _x;
-		var a = _root._ymouse - _y;
-		
-		// Get the radians based on arctan of a, o
-		radians = Math.atan2(a, o);
-		
-		// Calculate the degrees
-		degrees = radians * (180 / Math.PI)
+		look_degrees = 0;
+		move_degrees = 0;
 		
 		// --- MOVEMENT ---
 		
@@ -62,22 +68,38 @@ class classPointer extends MovieClip {
 			if (Key.isDown(rightKey)) moveX += walkVelocity;
 			if (Key.isDown(upKey)) moveY -= walkVelocity;
 			if (Key.isDown(downKey)) moveY += walkVelocity;
-		}
-		
-		if (followPointer) {
+		} else if (followPointer) {
+			var o = _root._xmouse - _x;
+			var a = _root._ymouse - _y;
 			
-			// Calculate distance
+			// Get the radians based on arctan of a, o
+			move_radians = Math.atan2(a, o);
 			
-			var distance = Math.sqrt(Math.pow(_xmouse, 2) + Math.pow(_ymouse, 2));
+			// Calculate the degrees
+			move_degrees = move_radians * (180 / Math.PI)
+			
+			distance = Math.sqrt(Math.pow(_xmouse, 2) + Math.pow(_ymouse, 2));
 			
 			if (distance > 15) {
 				// Calculate moveX and moveY
-				moveX = Math.cos(radians) * walkVelocity;
-				moveY = Math.sin(radians) * walkVelocity;
+				moveX = Math.cos(move_radians) * walkVelocity;
+				moveY = Math.sin(move_radians) * walkVelocity;
 			}
-			
 		}
 		
+		// --- ROTATION ---
+		
+		// get the opposite and adjacent sides
+		if (lookAtPointer) {
+			var o = _root._xmouse - _x;
+			var a = _root._ymouse - _y;
+		} else {
+			var o = moveX;
+			var a = moveY;
+		}
+		
+		look_radians = Math.atan2(a, o);
+		look_degrees = look_radians * (180 / Math.PI);
 			
 		// --- COLLISIONS ---
 		
@@ -94,12 +116,18 @@ class classPointer extends MovieClip {
 		
 		if (cameraFollowVertical) _root._y -= moveY;
 		
+		// --- UPDATE
+		
+		update();
+		
 		// --- FINALIZE ---
 		
 		_x += moveX;
 		_y += moveY;
 		
-		_rotation = degrees;
+		if (lookAtPointer) {
+			_rotation = look_degrees;
+		}
 		
 	}
 	
@@ -192,5 +220,7 @@ class classPointer extends MovieClip {
 	function isHit(thing) {
 		
 	}
+	
+	function update() {}
 	
 }
