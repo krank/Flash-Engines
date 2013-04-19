@@ -30,7 +30,8 @@ class classPointer extends MovieClip {
 	var followPointer = true;
 	var moveKeys = false;
 	
-	var cameraFollow = false;
+	var cameraFollowVertical = false;
+	var cameraFollowHorizontal = false;
 	
 	var radius = 25;
 	
@@ -89,10 +90,9 @@ class classPointer extends MovieClip {
 		
 		// --- CAMERA ---
 		
-		if (cameraFollow) {
-			_root._x -= moveX;
-			_root._y -= moveY;
-		}
+		if (cameraFollowHorizontal) _root._x -= moveX;
+		
+		if (cameraFollowVertical) _root._y -= moveY;
 		
 		// --- FINALIZE ---
 		
