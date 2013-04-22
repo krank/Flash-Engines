@@ -30,22 +30,27 @@ class classJumper extends MovieClip {
 	var useWallFriction = true;
 	
 	// Set up point positions
-	var topSidePoints = 0.2;
-	var bottomSidePoints = 0.8;
+	var topSidePoints:Number = 0.2;
+	var bottomSidePoints:Number = 0.8;
 	
 	// Set up controls
 	var leftButton = Key.LEFT;
 	var rightButton = Key.RIGHT;
 	var jumpButton = Key.SPACE;
 	
-	// Set up variables
-	var jumpForce;
-	var falling;
-	var inertia;
-	var inAir;
+	// Used to remember things about jumping/falling
+	var jumpForce:Number;
+	var inertia:Number;
+	var falling:Boolean;
+	var inAir:Boolean;
 	
+	// Used to remember current X and Y movement
 	var moveX;
 	var moveY;
+	
+	// Used to remember how collision with a solid affects X and Y
+	var effectX:Number;
+	var effectY:Number;
 	
 	var downForce;
 	var upForce;
@@ -183,9 +188,11 @@ class classJumper extends MovieClip {
 		
 		// Go through all solids
 		for (var solidnum in _root.solids) {
+			effectY = 0;
+			effectX = 0;
 			
 			// Use shorthand "s" for current solid
-			var s = _root.solids[solidnum];
+			var s:classSolid = _root.solids[solidnum];
 			
 			// --- WALLS ---
 
@@ -195,7 +202,7 @@ class classJumper extends MovieClip {
 				var overlapRight = checkRight(s);
 				// Use solid's overlap effect (for instance, stop jumper movement)
 				if (overlapRight) {
-					s.effectOverlap(this, 1 - overlapRight["x"]);
+					effectX = 1 - overlapRight["x"]
 				}
 			}
 			
@@ -205,7 +212,7 @@ class classJumper extends MovieClip {
 				var overlapLeft = checkLeft(s);
 				// Use solid's overlap effect (for instance, stop jumper movement)
 				if (overlapLeft) {
-					s.effectOverlap(this, (s._width - overlapLeft["x"]))
+					effectX = s._width - overlapLeft["x"];
 				}
 				
 			}
@@ -236,7 +243,7 @@ class classJumper extends MovieClip {
 				inAir = false;
 				
 				// Do not move into the ground
-				moveY -= overlap["y"];
+				effectY = 0 - overlap["y"];
 				
 				// If the jump button is held down while character is on the ground, character should not jump.
 				//  (fixes bouncing issue)
@@ -252,11 +259,17 @@ class classJumper extends MovieClip {
 			overlap = checkUp(s) // Head point
 			
 			if (overlap) {
-				s.effectBottom(this);
+				effectY = s._height - overlap["y"];
+				this.falling = true;
 			}
 			
+			// --- AFFECT X AND Y BASED ON COLLISIONS
+			if (effectX || effectY) {
+				s.effectOverlap(this, effectX, effectY);
+			}
 		}
 
+		
 		// --- APPLY WALL FRICTION ---
 		
 		if (wallFriction) {

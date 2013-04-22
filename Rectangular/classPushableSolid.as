@@ -1,6 +1,6 @@
 class classPushableSolid extends classSolid {
 	
-	var gravity:Number = 5; // Max fall speed. Set to 0 to disable gravity.
+	var gravity:Number = 5; // Max fall speed. Set to 0 to disable gravity. 20 is default.
 	var inertia:Number = 0; // Current inertia
 	
 	var visibleCheckers = false;
@@ -12,47 +12,75 @@ class classPushableSolid extends classSolid {
 	
 	var allowLeft:Boolean = true; // Remembers whether left-movement is allowed
 	var allowRight:Boolean = true; // Remembers whether right-movement is allowed
-	var thisMove:Boolean = true; // Used to remember whether the block or the one colliding with it should move
+	
+	var allowVerticalPush:Boolean = true;
+	var allowHorizontalPush:Boolean = true;
+	
+	// Used to remember whether the block or the one colliding with it should move
+	var thisMoveX:Boolean = true;
+	var thisMoveY:Boolean = true;
 	
 	var moverTypes:String = "jumper enemy";
 	
 	var lastDirection = 0;
+	
+	var onGround:Boolean = false;
 	
 	
 	function load() {
 		// Create the main collision checker
 		collisionChecker = createCollisionChecker(_x, _y, _width, _height, "collision" );
 		// Create the side collision checker
-		sideChecker = createCollisionChecker(_x, _y + (0.10 * _height), 10, 0.80 * _height, "side");
+		if (allowHorizontalPush) {
+			sideChecker = createCollisionChecker(_x, _y + (0.10 * _height), 10, 0.80 * _height, "horizontal");
+		}
+		
 	}
 	
-	function effectOverlap(thing, overlap) {
+	function effectOverlap(thing, overlapX, overlapY) {
 		
 		// Check if block is allowed to move in the direction it's pushed
-		var thisMove = false;
+		thisMoveX = false;
+		thisMoveY = false;
 		
-		if (overlap < 0 && allowRight) { // if going right, and is allowed to	
-			thisMove = true;
-		} else if (overlap > 0 && allowLeft) { // if going left, and is allowed to
-			thisMove = true;
+		if (overlapX < 0 && allowRight && allowHorizontalPush) { // if going right, and is allowed to	
+			thisMoveX = true;
+		} else if (overlapX > 0 && allowLeft && allowHorizontalPush) { // if going left, and is allowed to
+			thisMoveX = true;
 		}
 		
-		// Move either the block or 
-		if (thisMove) {
-			this._x -= overlap;
-		} else {
-			thing.moveX += overlap;
+		if (overlapY < 0 && allowVerticalPush) { // if going right, and is allowed to	
+			thisMoveY = true;
+		} else if (overlapY > 0 && allowVerticalPush) { // if going left, and is allowed to
+			thisMoveY = true;
 		}
+		
+		
+		// Move either the block or the pusher
+		if (thisMoveX)    this._x -= overlapX;
+		else              thing.moveX += overlapX;
+		
+		if (thisMoveY)    this._y -= overlapY;
+		else              thing.moveY += overlapY;
+		
+		if (gravity && !onGround) {
+			thing.moveY += gravity + inertia;
+		}
+		
 		
 		// Set block as dirty
 		dirty = true;
 		
 		// Place sideChecker on right side if going right, and vice versa
-		if (overlap < 0) {
+		if (overlapX < 0) {
 			sideChecker._x = _x + _width; // Going right
-		} else if (overlap > 0) {
+		} else if (overlapX > 0) {
 			sideChecker._x = _x - sideChecker._width; // Going left
 		}
+		
+		// Fix the Y
+		//thing.moveY += overlapY;
+		
 	}
 	
 	function onEnterFrame() {
@@ -72,6 +100,8 @@ class classPushableSolid extends classSolid {
 				allowLeft = true;
 				allowRight = true;
 				
+				onGround = false;
+				
 				// Check if collision checker collides with any of our friends
 				for (var sNum in _root.solids) {
 					var solid = _root.solids[sNum];
@@ -81,6 +111,7 @@ class classPushableSolid extends classSolid {
 							var negY = collisionChecker._y + collisionChecker._height - solid._y;
 							collisionChecker._y -= negY;
 							dirty = false;
+							onGround = true;
 						}
 						
 						// check left/right collisions
