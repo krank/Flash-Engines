@@ -14,6 +14,8 @@
 
 class classPointer extends MovieClip {
 	
+	// SETTINGS
+	
 	// Walking speed
 	var walkVelocity:Number = 10;
 
@@ -22,7 +24,7 @@ class classPointer extends MovieClip {
 	var downKey:Number = 83;	//s
 	var leftKey:Number = 65;	//a
 	var rightKey:Number = 68;	//d
-
+	
 	// What to follow and look at
 	var followPointer:Boolean = true;
 	var lookAtPointer:Boolean = true;
@@ -35,8 +37,10 @@ class classPointer extends MovieClip {
 	
 	// Set to the radius used for collision detection (assuming round symbol)
 	var radius:Number = 25;
-
-
+	
+	
+	// VARIABLES
+	
 	// Remembers the rotation direction
 	var look_degrees:Number;
 	var look_radians:Number;
@@ -50,6 +54,9 @@ class classPointer extends MovieClip {
 	
 	// Remembers the distance between pointer and center of pointer
 	var distance:Number;
+	
+	// Remembers the current media trigger when going through the stack
+	var mediaTrigger:classMediaTrigger;
 	
 	
 	
@@ -107,6 +114,7 @@ class classPointer extends MovieClip {
 			
 			checkSolids();
 			hitChecks();
+			checkMediaTriggers();
 			
 			// --- SHOOTING THINGS ---
 			
@@ -130,6 +138,17 @@ class classPointer extends MovieClip {
 			if (lookAtPointer) {
 				_rotation = look_degrees;
 			}
+		}
+	}
+	
+	function checkMediaTriggers() {
+		for (var triggerNum in _root.mediaTriggers) {
+			mediaTrigger = _root.mediaTriggers[triggerNum];
+			
+			if (this.hitTest(mediaTrigger)) {
+				mediaTrigger.activate();
+			}
+			
 		}
 	}
 	
@@ -219,9 +238,7 @@ class classPointer extends MovieClip {
 		}
 	}
 	
-	function isHit(thing) {
-		
-	}
+	function isHit(thing) {}
 	
 	function update() {}
 	
