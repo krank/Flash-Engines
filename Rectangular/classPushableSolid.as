@@ -3,15 +3,19 @@ class classPushableSolid extends classSolid {
 	var gravity:Number = 5; // Max fall speed. Set to 0 to disable gravity. 20 is default.
 	var inertia:Number = 0; // Current inertia
 	
-	var visibleCheckers = false;
+	var visibleCheckers = true;
 	
 	var dirty:Boolean = true; // Remembers if something has changed
 	
 	var collisionChecker:MovieClip; // Movieclip used mainly for checking for bottom-collisions
 	var sideChecker:MovieClip; // Movieclip used to check collisions left/right
+	var vertChecker:MovieClip; // Movieclip used to check vertical collisions
 	
 	var allowLeft:Boolean = true; // Remembers whether left-movement is allowed
 	var allowRight:Boolean = true; // Remembers whether right-movement is allowed
+	
+	var allowDown:Boolean = true;
+	var allowUp:Boolean = true;
 	
 	var allowVerticalPush:Boolean = true;
 	var allowHorizontalPush:Boolean = true;
@@ -23,6 +27,7 @@ class classPushableSolid extends classSolid {
 	var moverTypes:String = "jumper enemy";
 	
 	var lastDirection = 0;
+	var currentDirection = 0;
 	
 	var onGround:Boolean = false;
 	
@@ -33,6 +38,10 @@ class classPushableSolid extends classSolid {
 		// Create the side collision checker
 		if (allowHorizontalPush) {
 			sideChecker = createCollisionChecker(_x, _y + (0.10 * _height), 10, 0.80 * _height, "horizontal");
+		}
+		
+		if (allowVerticalPush || gravity != 0) {
+			vertChecker = createCollisionChecker(_x + (0.10 * _width), _y, 0.80 * _width, 10, "vertical");
 		}
 		
 	}
@@ -66,8 +75,7 @@ class classPushableSolid extends classSolid {
 		if (gravity && !onGround) {
 			thing.moveY += gravity + inertia;
 		}
-		
-		
+
 		// Set block as dirty
 		dirty = true;
 		
@@ -89,6 +97,10 @@ class classPushableSolid extends classSolid {
 		
 			// Check if there's any reason to suspect any change
 			if (dirty) {
+				
+				
+				
+				
 				
 				// Reset the collision checker's x and y values to those of the block
 				collisionChecker._x = _x;
@@ -127,7 +139,6 @@ class classPushableSolid extends classSolid {
 				
 				this._y = collisionChecker._y;
 				sideChecker._y = collisionChecker._y + collisionChecker._height * 0.10;
-				
 			}
 			
 			update();
