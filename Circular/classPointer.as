@@ -32,8 +32,8 @@ class classPointer extends MovieClip {
 	var deadzone:Number = 15 // only used when following pointer
 	
 	// Camera following
-	var cameraFollowVertical:Boolean = false;
-	var cameraFollowHorizontal:Boolean = false;
+	var cameraFollowVertical:Boolean = true;
+	var cameraFollowHorizontal:Boolean = true;
 	
 	// Set to the radius used for collision detection (assuming round symbol)
 	var radius:Number = 25;
@@ -109,22 +109,25 @@ class classPointer extends MovieClip {
 			
 			look_radians = Math.atan2(a, o);
 			look_degrees = look_radians * (180 / Math.PI);
-				
-			// --- COLLISIONS ---
-			
-			checkSolids();
-			hitChecks();
-			checkMediaTriggers();
 			
 			// --- SHOOTING THINGS ---
 			
 			// Not done yet
+			
+			// --- COLLISIONS ---
+			
+			checkSolids();
+			hitChecks();
 			
 			// --- CAMERA ---
 			
 			if (cameraFollowHorizontal) _root._x -= moveX;
 			
 			if (cameraFollowVertical) _root._y -= moveY;
+			
+			// --- MEDIA TRIGGERS
+			
+			checkMediaTriggers();
 			
 			// --- UPDATE
 			

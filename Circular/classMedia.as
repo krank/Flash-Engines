@@ -26,12 +26,15 @@ class classMedia extends MovieClip {
 		
 		// Do not play immediately
 		this.stop();
+		
+		this._visible = false;
 	}
 	
 	function onEnterFrame() {
 		// If media has reached the end of its timeline, stop it.
 		if (this._currentframe == this._totalframes) {
 			this.stop();
+			this._visible = false;
 			
 			// Also reset to original position
 			this._x = origX;
@@ -47,14 +50,15 @@ class classMedia extends MovieClip {
 		
 		// Play, if not already playing
 		if ( !isPlaying ) {
-			
+
 			// Move to center of stage
-			this._x = Stage.width / 2 - this._width / 2;
-			this._y = Stage.height / 2 - this._height / 2;
+			this._x = Stage.width / 2 - this._width / 2 - _root._x;
+			this._y = Stage.height / 2 - this._height / 2 - _root._y;
 			
 			// Play
 			this.play()
 			isPlaying = true;
+			this._visible = true;
 			
 			// Pause the game
 			if (doPause) _root.paused = true;

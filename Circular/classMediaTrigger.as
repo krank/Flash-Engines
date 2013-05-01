@@ -12,7 +12,7 @@ import mx.data.encoders.Num;
 class classMediaTrigger extends MovieClip {
 	
 	// SETTINGS
-	var triggerDelay:Number = 20; // The number of frames to wait between activations. 0 = no delay
+	var triggerDelay:Number = 24; // The number of frames to wait between activations. 0 = no delay
 	var destroyAfterUse:Boolean = false; // set to true to destroy trigger after first activation
 	
 	// VARIABLES
