@@ -448,7 +448,7 @@ class classJumper extends MovieClip {
 	// Extend this class and replace the update method in order to 
 	// change movement etc.
 	function update() {
-		moveX += 10;
+
 	}
 	
 	// Replace this method to detect and change animation state
