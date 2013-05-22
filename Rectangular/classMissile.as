@@ -1,19 +1,22 @@
-class classMissile extends MovieClip {
+﻿class classMissile extends MovieClip {
 
 	// Set speed
-	var speed = 10;
+	var speed:Number = 10;
 	
 	// Set type
-	var type = "missile";
+	var type:String = "missile";
 	
 	// Name of thing to follow
-	var follow = false;
+	var follow:Boolean = false;
+	
+	// Maximum age
+	var age:Number = 48 // 48 frames = 2 seconds. Will count down.
 	
 	// Variables
-	var moveX;
-	var moveY;
+	var moveX:Number;
+	var moveY:Number;
 	
-	var degrees;
+	var degrees:Number;
 	
 	
 	
@@ -55,6 +58,12 @@ class classMissile extends MovieClip {
 	function onEnterFrame() {
 		
 		if (!_root.paused) {
+			
+			// Make sure the missile does not live forever
+			age -= 1
+			if (age == 0) {
+				this.unloadMovie()
+			}
 			
 			if (not moveX) {
 				moveX = speed;

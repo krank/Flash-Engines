@@ -142,17 +142,20 @@ class classJumper extends MovieClip {
 			// Do hit checking
 			hitChecks();
 
-			// Apply final forces.
-			move(moveX, moveY);
+			// User-defined update()
+			update();
 			
 			// Get new animation state
 			detectAnimationState();
 
-			// User-defined update()
-			update();
+			// Get user-defined animation state
+			animate();
 			
 			// Apply animation state
 			applyAnimation();
+			
+			// Apply final forces.
+			move(moveX, moveY);
 		
 		}
 		
@@ -405,13 +408,12 @@ class classJumper extends MovieClip {
 			}
 		} else {
 			// If right button is down and animstate not set accordingly
-			if (Key.isDown(rightButton) && currentAnimState != "walkRight") {
-				
+			if (this.moveX > 0 && currentAnimState != "walkRight") {
 				// Set new state
 				newAnimState = "walkRight";
 			
 			// If left button is down and animstate not set accordingly
-			} else if (Key.isDown(leftButton) && currentAnimState != "walkLeft") {
+			} else if (this.moveX < 0 && currentAnimState != "walkLeft") {
 				
 				// Set new state
 				newAnimState = "walkLeft";
@@ -444,8 +446,13 @@ class classJumper extends MovieClip {
 	
 	
 	// Extend this class and replace the update method in order to 
-	// add extra code.
+	// change movement etc.
 	function update() {
+
+	}
+	
+	// Replace this method to detect and change animation state
+	function animate() {
 		
 	}
 	
