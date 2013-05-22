@@ -119,12 +119,6 @@ class classPointer extends MovieClip {
 			checkSolids();
 			hitChecks();
 			
-			// --- CAMERA ---
-			
-			if (cameraFollowHorizontal) _root._x -= moveX;
-			
-			if (cameraFollowVertical) _root._y -= moveY;
-			
 			// --- MEDIA TRIGGERS
 			
 			checkMediaTriggers();
@@ -135,8 +129,7 @@ class classPointer extends MovieClip {
 			
 			// --- FINALIZE ---
 			
-			_x += moveX;
-			_y += moveY;
+			this.move(moveX, moveY);
 			
 			if (lookAtPointer) {
 				_rotation = look_degrees;
@@ -237,6 +230,55 @@ class classPointer extends MovieClip {
 					this.isHit(unFriendly);
 					unFriendly.isHit(this);
 				}
+			}
+		}
+		
+		
+		// If there are teleports...
+		if (_root.teleports) {
+			
+			// Go through all teleports
+			for (var teleportNum in _root.teleports) {
+				
+				// Check if the teleport hits us
+				var teleport = _root.teleports[teleportNum];
+				if (this.hitTest(teleport)) {
+					teleport.activate(this);
+				}
+				
+			}
+			
+		}
+	}
+	
+	function move(moveX, moveY) {
+		// Set initial movement (relative to _root) for static objects
+		var staticMoveX = 0;
+		var staticMoveY = 0;
+
+		// Move the jumper
+		this._x += moveX;
+		this._y += moveY;
+		
+		// Check for camera movements
+		if (this.cameraFollowHorizontal) {
+			// Move _root along X-axis
+			_root._x -= moveX;
+			// Set static movement along X-axis
+			staticMoveX = moveX;
+		}
+		if (this.cameraFollowVertical) {
+			// Move _root along Y-axis
+			_root._y -= moveY;
+			// Set static movement aling Y-axis
+			staticMoveY = moveY;
+		}
+		
+		// Check statics
+		if (this.cameraFollowHorizontal || this.cameraFollowVertical) {
+			for (var i in _root.statics) {
+				_root.statics[i]._x += staticMoveX;
+				_root.statics[i]._y += staticMoveY;
 			}
 		}
 	}
