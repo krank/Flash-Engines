@@ -1,1 +1,23 @@
 This is a project dedicated to creating AS2/3-based Flash game engines for pedagogical use
+
+classSolid = platforms, walls
+
+classJumper = player-controlled avatar
+
+classModifier = semi-solids acting as water etc
+
+classEnemy = "dumb" enemy
+
+classEnemyTurning = Enemy that turns when encountering an edge
+
+classStatic = static graphical elements
+
+classTeleport = teleportation source. Name as X or X_Y where X is name of Target (below) and Y is unique identifier.
+
+classTarget = teleportation target. Name as t_X.
+
+classMissile = programmable missiles.
+
+
+The Jumper has six apperances; standLeft, standRight, walkLeft, walkRight, jumpLeft, jumpRight. Use named keyframes. If you want animation, use separate animated symbols in the keyframes.
+
